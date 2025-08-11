@@ -1,0 +1,227 @@
+/*
+ * Base styles for the English learning PWA. We aim for large,
+ * easy-to-read text, high contrast and generous spacing. The
+ * palette uses blues for primary actions and light greys for
+ * secondary elements.
+ */
+
+:root {
+  --primary-color: #3366cc;
+  --secondary-color: #e0e0e0;
+  --text-color: #222;
+  --background-color: #fafafa;
+  --font-scale: 1.0;
+  /* Adjust this value if you need larger text globally */
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+main#app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.screen {
+  flex: 1;
+  display: none;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.screen.active {
+  display: block;
+}
+
+h1 {
+  font-size: calc(2rem * var(--font-scale));
+  margin-top: 0;
+}
+
+p,
+li,
+button {
+  font-size: calc(1.2rem * var(--font-scale));
+  line-height: 1.4;
+}
+
+button {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button.primary {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+button.secondary {
+  background-color: var(--secondary-color);
+  color: var(--text-color);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Goal selection buttons */
+.goal-options {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.goal-options button {
+  flex: 1;
+  background-color: var(--secondary-color);
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+  padding: 1rem;
+}
+
+.goal-options button.selected {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+/* Containers */
+.plan-container,
+.units-list,
+.flashcard-content,
+.quiz-content,
+.progress-summary {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.home-actions,
+.lesson-controls,
+.flashcard-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.unit-card {
+  border: 2px solid var(--primary-color);
+  border-radius: 10px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  background-color: #fff;
+}
+
+.unit-card h3 {
+  margin: 0;
+  font-size: calc(1.5rem * var(--font-scale));
+}
+
+.unit-card .progress-bar {
+  margin-top: 0.5rem;
+  height: 10px;
+  background-color: var(--secondary-color);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.unit-card .progress-bar .fill {
+  height: 100%;
+  background-color: var(--primary-color);
+  width: 0%;
+}
+
+/* Lesson view */
+.lesson-content {
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.lesson-content .phrase {
+  font-size: calc(2rem * var(--font-scale));
+  margin: 0.5rem 0;
+}
+
+.lesson-content .translation {
+  font-size: calc(1.5rem * var(--font-scale));
+  color: #666;
+  margin: 0.5rem 0;
+}
+
+.lesson-controls button {
+  flex: 1;
+}
+
+/* Flashcard view */
+.flashcard {
+  border: 2px solid var(--primary-color);
+  border-radius: 10px;
+  padding: 2rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.flashcard .front {
+  font-size: calc(2rem * var(--font-scale));
+}
+
+.flashcard .back {
+  font-size: calc(1.8rem * var(--font-scale));
+  color: #666;
+}
+
+.flashcard-buttons button {
+  flex: 1;
+}
+
+/* Quiz view */
+.quiz-question {
+  font-size: calc(1.5rem * var(--font-scale));
+  margin-bottom: 1rem;
+}
+
+.quiz-options button {
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
+.quiz-result {
+  font-size: calc(1.5rem * var(--font-scale));
+  margin-top: 1rem;
+}
+
+/* Progress view */
+.badge {
+  display: inline-block;
+  background-color: var(--primary-color);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  margin: 0.25rem;
+  font-size: calc(1rem * var(--font-scale));
+}
+
+/* Utility classes */
+.hidden {
+  display: none !important;
+}
