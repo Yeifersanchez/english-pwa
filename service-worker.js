@@ -8,7 +8,12 @@
  * navigation requests so the app can still load in offline mode.
  */
 
-const CACHE_NAME = 'english-pwa-v1';
+// Bump the cache version whenever core assets change so that
+// previously cached resources are invalidated. This ensures users
+// receive the latest styles and scripts without having to manually
+// clear their browser cache. Increment the suffix each time you
+// modify CSS, JS or HTML files.
+const CACHE_NAME = 'english-pwa-v2';
 
 // List of resources to precache on install. These are critical files
 // required for the app shell to render.
