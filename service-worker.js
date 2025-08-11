@@ -13,15 +13,21 @@
 // receive the latest styles and scripts without having to manually
 // clear their browser cache. Increment the suffix each time you
 // modify CSS, JS or HTML files.
-const CACHE_NAME = 'english-pwa-v2';
+// Update cache name to trigger new cache on deployment. Bump the suffix
+// whenever the core files (index.html or manifest) change. Since we have
+// inlined our CSS and JS into index.html, we no longer precache those
+// separate files. This version is v3.
+const CACHE_NAME = 'english-pwa-v3';
 
 // List of resources to precache on install. These are critical files
 // required for the app shell to render.
+// List of resources to precache on install.  In this version the CSS and JS
+// are inlined inside index.html so we only need to precache the root page
+// and manifest. Additional assets (like icons) will be cached on-demand via
+// the runtime caching logic.
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
-  '/css/style.css',
-  '/js/app.js',
   '/manifest.json',
 ];
 

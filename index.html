@@ -7,7 +7,236 @@
     <meta name="theme-color" content="#3366cc" />
     <link rel="manifest" href="manifest.json" />
     <title>Aprende Inglés</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <!-- Inline critical styles for better offline support and to avoid path issues -->
+    <style>
+    /*
+     * Embedded styles from css/style.css. Inlining these styles ensures that the
+     * PWA will render correctly on hosting platforms that may not serve
+     * additional assets such as CSS files. See css/style.css for the original
+     * source if you need to edit the styling.
+     */
+    :root {
+      --primary-color: #3366cc;
+      --secondary-color: #e0e0e0;
+      --text-color: #222;
+      --background-color: #fafafa;
+      /* Increase global font scale for better readability on mobile and for older learners */
+      --font-scale: 1.3;
+      /* Adjust this value if you need larger text globally */
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+    }
+
+    main#app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen {
+      flex: 1;
+      display: none;
+      padding: 1.5rem;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    h1 {
+      font-size: calc(2rem * var(--font-scale));
+      margin-top: 0;
+    }
+
+    p,
+    li,
+    button {
+      font-size: calc(1.2rem * var(--font-scale));
+      line-height: 1.4;
+    }
+
+    button {
+      display: inline-block;
+      margin-top: 1rem;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button.primary {
+      background-color: var(--primary-color);
+      color: #fff;
+    }
+
+    button.secondary {
+      background-color: var(--secondary-color);
+      color: var(--text-color);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+
+    /* Goal selection buttons */
+    .goal-options {
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .goal-options button {
+      flex: 1;
+      background-color: var(--secondary-color);
+      border: 2px solid var(--primary-color);
+      color: var(--primary-color);
+      padding: 1rem;
+    }
+
+    .goal-options button.selected {
+      background-color: var(--primary-color);
+      color: #fff;
+    }
+
+    /* Containers */
+    .plan-container,
+    .units-list,
+    .flashcard-content,
+    .quiz-content,
+    .progress-summary {
+      margin-top: 1rem;
+      padding: 1rem;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .home-actions,
+    .lesson-controls,
+    .flashcard-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .unit-card {
+      border: 2px solid var(--primary-color);
+      border-radius: 10px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      background-color: #fff;
+    }
+
+    .unit-card h3 {
+      margin: 0;
+      font-size: calc(1.5rem * var(--font-scale));
+    }
+
+    .unit-card .progress-bar {
+      margin-top: 0.5rem;
+      height: 10px;
+      background-color: var(--secondary-color);
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .unit-card .progress-bar .fill {
+      height: 100%;
+      background-color: var(--primary-color);
+      width: 0%;
+    }
+
+    /* Lesson view */
+    .lesson-content {
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    .lesson-content .phrase {
+      font-size: calc(2rem * var(--font-scale));
+      margin: 0.5rem 0;
+    }
+
+    .lesson-content .translation {
+      font-size: calc(1.5rem * var(--font-scale));
+      color: #666;
+      margin: 0.5rem 0;
+    }
+
+    .lesson-controls button {
+      flex: 1;
+    }
+
+    /* Flashcard view */
+    .flashcard {
+      border: 2px solid var(--primary-color);
+      border-radius: 10px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .flashcard .front {
+      font-size: calc(2rem * var(--font-scale));
+    }
+
+    .flashcard .back {
+      font-size: calc(1.8rem * var(--font-scale));
+      color: #666;
+    }
+
+    .flashcard-buttons button {
+      flex: 1;
+    }
+
+    /* Quiz view */
+    .quiz-question {
+      font-size: calc(1.5rem * var(--font-scale));
+      margin-bottom: 1rem;
+    }
+
+    .quiz-options button {
+      width: 100%;
+      margin-bottom: 0.75rem;
+    }
+
+    .quiz-result {
+      font-size: calc(1.5rem * var(--font-scale));
+      margin-top: 1rem;
+    }
+
+    /* Progress view */
+    .badge {
+      display: inline-block;
+      background-color: var(--primary-color);
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      margin: 0.25rem;
+      font-size: calc(1rem * var(--font-scale));
+    }
+
+    /* Utility classes */
+    .hidden {
+      display: none !important;
+    }
+    </style>
   </head>
   <body>
     <main id="app">
@@ -77,6 +306,1080 @@
         <button id="progress-back" class="secondary" type="button">Volver</button>
       </section>
     </main>
-    <script src="js/app.js"></script>
+    <!-- Inline the application logic to ensure it loads correctly when hosted on platforms
+         that don't serve separate JS files. See js/app.js for the original source. -->
+    <script>
+    (function () {
+      // Embedded contents of js/app.js start here. This IIFE ensures the variables
+      // and functions are scoped locally and do not pollute the global namespace.
+      // ---------------------------------------------------------------------------
+      // Data definitions
+      //
+      // Each unit contains a set of lessons. A lesson has an id, the English
+      // phrase, its Spanish translation and a type (word or phrase). You can
+      // extend these arrays to include more vocabulary. These lists currently
+      // cover basic introductions, essential vocabulary and simple grammar. If
+      // you wish to meet the 300–400 word target you should add additional
+      // entries here or load them from an external JSON file.
+      // ---------------------------------------------------------------------------
+      const units = [
+        {
+          id: 1,
+          name: 'Introducción al inglés',
+          lessons: [
+            { id: 'u1-1', eng: 'Hello', es: 'Hola' },
+            { id: 'u1-2', eng: 'Goodbye', es: 'Adiós' },
+            { id: 'u1-3', eng: 'Please', es: 'Por favor' },
+            { id: 'u1-4', eng: 'Thank you', es: 'Gracias' },
+            { id: 'u1-5', eng: 'Yes', es: 'Sí' },
+            { id: 'u1-6', eng: 'No', es: 'No' },
+            { id: 'u1-7', eng: "I'm sorry", es: 'Lo siento' },
+            { id: 'u1-8', eng: 'Good morning', es: 'Buenos días' },
+            { id: 'u1-9', eng: 'Good night', es: 'Buenas noches' },
+            { id: 'u1-10', eng: 'My name is...', es: 'Mi nombre es...' },
+            { id: 'u1-11', eng: 'How are you?', es: '¿Cómo estás?' },
+            { id: 'u1-12', eng: "I'm fine", es: 'Estoy bien' },
+            { id: 'u1-13', eng: 'Nice to meet you', es: 'Mucho gusto' },
+            { id: 'u1-14', eng: 'Where is the bathroom?', es: '¿Dónde está el baño?' },
+            { id: 'u1-15', eng: "I don't understand", es: 'No entiendo' },
+            { id: 'u1-16', eng: 'Speak slowly please', es: 'Habla despacio, por favor' },
+          ],
+        },
+        {
+          id: 2,
+          name: 'Vocabulario esencial',
+          lessons: [
+            { id: 'u2-1', eng: 'Mother', es: 'Madre' },
+            { id: 'u2-2', eng: 'Father', es: 'Padre' },
+            { id: 'u2-3', eng: 'Brother', es: 'Hermano' },
+            { id: 'u2-4', eng: 'Sister', es: 'Hermana' },
+            { id: 'u2-5', eng: 'Son', es: 'Hijo' },
+            { id: 'u2-6', eng: 'Daughter', es: 'Hija' },
+            { id: 'u2-7', eng: 'Husband', es: 'Esposo' },
+            { id: 'u2-8', eng: 'Wife', es: 'Esposa' },
+            { id: 'u2-9', eng: 'Friend', es: 'Amigo/Amiga' },
+            { id: 'u2-10', eng: 'House', es: 'Casa' },
+            { id: 'u2-11', eng: 'Food', es: 'Comida' },
+            { id: 'u2-12', eng: 'Water', es: 'Agua' },
+            { id: 'u2-13', eng: 'Bread', es: 'Pan' },
+            { id: 'u2-14', eng: 'Coffee', es: 'Café' },
+            { id: 'u2-15', eng: 'Milk', es: 'Leche' },
+            { id: 'u2-16', eng: 'Restaurant', es: 'Restaurante' },
+            { id: 'u2-17', eng: 'Supermarket', es: 'Supermercado' },
+            { id: 'u2-18', eng: 'Bus', es: 'Autobús' },
+            { id: 'u2-19', eng: 'Taxi', es: 'Taxi' },
+            { id: 'u2-20', eng: 'Airport', es: 'Aeropuerto' },
+          ],
+        },
+        {
+          id: 3,
+          name: 'Gramática básica y estructura',
+          lessons: [
+            { id: 'u3-1', eng: 'I am', es: 'Yo soy / Yo estoy' },
+            { id: 'u3-2', eng: 'You are', es: 'Tú eres / Tú estás' },
+            { id: 'u3-3', eng: 'He is', es: 'Él es / Él está' },
+            { id: 'u3-4', eng: 'She is', es: 'Ella es / Ella está' },
+            { id: 'u3-5', eng: 'We are', es: 'Nosotros somos / Nosotros estamos' },
+            { id: 'u3-6', eng: 'They are', es: 'Ellos son / Ellos están' },
+            { id: 'u3-7', eng: 'I have', es: 'Yo tengo' },
+            { id: 'u3-8', eng: 'You have', es: 'Tú tienes' },
+            { id: 'u3-9', eng: 'He has', es: 'Él tiene' },
+            { id: 'u3-10', eng: 'She has', es: 'Ella tiene' },
+            { id: 'u3-11', eng: 'We have', es: 'Nosotros tenemos' },
+            { id: 'u3-12', eng: 'They have', es: 'Ellos tienen' },
+            { id: 'u3-13', eng: 'Do you want to ...?', es: '¿Quieres ...?' },
+            { id: 'u3-14', eng: 'I like', es: 'Me gusta' },
+            { id: 'u3-15', eng: 'I need', es: 'Necesito' },
+            { id: 'u3-16', eng: 'I want', es: 'Quiero' },
+            { id: 'u3-17', eng: "I don't like", es: 'No me gusta' },
+            { id: 'u3-18', eng: 'Where do you live?', es: '¿Dónde vives?' },
+            { id: 'u3-19', eng: 'What is your name?', es: '¿Cómo te llamas?' },
+            { id: 'u3-20', eng: 'How old are you?', es: '¿Cuántos años tienes?' },
+          ],
+        },
+        {
+          id: 4,
+          name: 'Escucha y habla',
+          lessons: [
+            { id: 'u4-1', eng: 'Where is the ...?', es: '¿Dónde está el/la ...?' },
+            { id: 'u4-2', eng: 'How much is it?', es: '¿Cuánto cuesta?' },
+            { id: 'u4-3', eng: 'Can you help me?', es: '¿Puedes ayudarme?' },
+            { id: 'u4-4', eng: 'Could you repeat that?', es: '¿Podrías repetir eso?' },
+            { id: 'u4-5', eng: 'Good afternoon', es: 'Buenas tardes' },
+            { id: 'u4-6', eng: 'See you later', es: 'Hasta luego' },
+            { id: 'u4-7', eng: 'Good evening', es: 'Buenas noches' },
+            { id: 'u4-8', eng: 'Good luck', es: 'Buena suerte' },
+            { id: 'u4-9', eng: 'Congratulations', es: 'Felicidades' },
+            { id: 'u4-10', eng: 'Have a nice day', es: 'Que tengas un buen día' },
+            { id: 'u4-11', eng: 'Welcome', es: 'Bienvenido/Bienvenida' },
+            { id: 'u4-12', eng: 'What happened?', es: '¿Qué pasó?' },
+            { id: 'u4-13', eng: 'I love it', es: 'Me encanta' },
+            { id: 'u4-14', eng: "It's okay", es: 'Está bien' },
+            { id: 'u4-15', eng: "It doesn’t matter", es: 'No importa' },
+            { id: 'u4-16', eng: 'I agree', es: 'Estoy de acuerdo' },
+            { id: 'u4-17', eng: "I don't know", es: 'No sé' },
+            { id: 'u4-18', eng: 'Excuse me', es: 'Perdón / Disculpa' },
+            { id: 'u4-19', eng: 'Bless you', es: 'Salud' },
+            { id: 'u4-20', eng: 'Cheers', es: 'Salud (brindis)' },
+          ],
+        },
+        {
+          id: 5,
+          name: 'Conversación cotidiana',
+          lessons: [
+            { id: 'u5-1', eng: 'Where is the bank?', es: '¿Dónde está el banco?' },
+            { id: 'u5-2', eng: 'I would like to order', es: 'Me gustaría pedir' },
+            { id: 'u5-3', eng: "I'm looking for ...", es: 'Estoy buscando ...' },
+            { id: 'u5-4', eng: 'How do I get to ...?', es: '¿Cómo llego a ...?' },
+            { id: 'u5-5', eng: 'Do you speak Spanish?', es: '¿Hablas español?' },
+            { id: 'u5-6', eng: 'I want to buy ...', es: 'Quiero comprar ...' },
+            { id: 'u5-7', eng: 'What time is it?', es: '¿Qué hora es?' },
+            { id: 'u5-8', eng: "It's very expensive", es: 'Es muy caro' },
+            { id: 'u5-9', eng: "I'm lost", es: 'Estoy perdido/perdida' },
+            { id: 'u5-10', eng: "It's delicious", es: 'Está delicioso' },
+            { id: 'u5-11', eng: 'The check, please', es: 'La cuenta, por favor' },
+            { id: 'u5-12', eng: 'Can I help you?', es: '¿Puedo ayudarte?' },
+            { id: 'u5-13', eng: 'Just a moment', es: 'Un momento' },
+            { id: 'u5-14', eng: "I'm sorry to bother you", es: 'Perdón por molestarte' },
+            { id: 'u5-15', eng: "I don’t have any cash", es: 'No tengo efectivo' },
+            { id: 'u5-16', eng: 'Do you accept credit cards?', es: '¿Aceptan tarjetas de crédito?' },
+            { id: 'u5-17', eng: 'Can I try it on?', es: '¿Puedo probármelo?' },
+            { id: 'u5-18', eng: 'Where can I find ...?', es: '¿Dónde puedo encontrar ...?' },
+            { id: 'u5-19', eng: 'I have a reservation', es: 'Tengo una reserva' },
+            { id: 'u5-20', eng: 'How long does it take?', es: '¿Cuánto tiempo tarda?' },
+          ],
+        },
+      ];
+      // -------------------------------------------------------------------------
+      // Extended curriculum
+      //
+      // The initial units above introduce core vocabulary and basic conversations.
+      // To reach the target of 300–400 high‑frequency words and richer language
+      // practice, we provide additional units below. These units cover reading and
+      // writing, intermediate grammar, pronunciation drills, cultural idioms,
+      // conversational fluency, practical English for travel/work, and a final
+      // review unit. Each unit contains 30 items with English phrases and
+      // their Spanish translations. We push these units into the existing
+      // `units` array so they are treated exactly the same as the core units.
+      // -------------------------------------------------------------------------
+      const moreUnits = [
+        {
+          id: 6,
+          name: 'Lectura y escritura',
+          lessons: [
+            { id: 'u6-1', eng: 'Book', es: 'Libro' },
+            { id: 'u6-2', eng: 'Pen', es: 'Pluma' },
+            { id: 'u6-3', eng: 'Notebook', es: 'Cuaderno' },
+            { id: 'u6-4', eng: 'Paper', es: 'Papel' },
+            { id: 'u6-5', eng: 'Sentence', es: 'Oración' },
+            { id: 'u6-6', eng: 'Word', es: 'Palabra' },
+            { id: 'u6-7', eng: 'Letter', es: 'Letra' },
+            { id: 'u6-8', eng: 'Paragraph', es: 'Párrafo' },
+            { id: 'u6-9', eng: 'Read', es: 'Leer' },
+            { id: 'u6-10', eng: 'Write', es: 'Escribir' },
+            { id: 'u6-11', eng: 'Spell', es: 'Deletrear' },
+            { id: 'u6-12', eng: 'Question', es: 'Pregunta' },
+            { id: 'u6-13', eng: 'Answer', es: 'Respuesta' },
+            { id: 'u6-14', eng: 'Story', es: 'Historia' },
+            { id: 'u6-15', eng: 'Dictionary', es: 'Diccionario' },
+            { id: 'u6-16', eng: 'Pencil', es: 'Lápiz' },
+            { id: 'u6-17', eng: 'Page', es: 'Página' },
+            { id: 'u6-18', eng: 'Title', es: 'Título' },
+            { id: 'u6-19', eng: 'Author', es: 'Autor' },
+            { id: 'u6-20', eng: 'Main idea', es: 'Idea principal' },
+            { id: 'u6-21', eng: 'Summary', es: 'Resumen' },
+            { id: 'u6-22', eng: 'Title case', es: 'Mayúsculas y minúsculas' },
+            { id: 'u6-23', eng: 'Verb', es: 'Verbo' },
+            { id: 'u6-24', eng: 'Noun', es: 'Sustantivo' },
+            { id: 'u6-25', eng: 'Adjective', es: 'Adjetivo' },
+            { id: 'u6-26', eng: 'Subject', es: 'Sujeto' },
+            { id: 'u6-27', eng: 'Object', es: 'Objeto' },
+            { id: 'u6-28', eng: 'Write your name', es: 'Escribe tu nombre' },
+            { id: 'u6-29', eng: 'Read aloud', es: 'Lee en voz alta' },
+            { id: 'u6-30', eng: 'Sign here', es: 'Firma aquí' },
+          ],
+        },
+        {
+          id: 7,
+          name: 'Gramática intermedia',
+          lessons: [
+            { id: 'u7-1', eng: 'Simple past', es: 'Pasado simple' },
+            { id: 'u7-2', eng: 'Past continuous', es: 'Pasado continuo' },
+            { id: 'u7-3', eng: 'Will', es: 'Futuro (will)' },
+            { id: 'u7-4', eng: 'Going to', es: 'Ir a' },
+            { id: 'u7-5', eng: 'Can', es: 'Poder' },
+            { id: 'u7-6', eng: 'Should', es: 'Debería' },
+            { id: 'u7-7', eng: 'Must', es: 'Debe' },
+            { id: 'u7-8', eng: 'Prepositions', es: 'Preposiciones' },
+            { id: 'u7-9', eng: 'Comparatives', es: 'Comparativos' },
+            { id: 'u7-10', eng: 'Superlatives', es: 'Superlativos' },
+            { id: 'u7-11', eng: 'Present perfect', es: 'Presente perfecto' },
+            { id: 'u7-12', eng: 'Past perfect', es: 'Pasado perfecto' },
+            { id: 'u7-13', eng: 'Future perfect', es: 'Futuro perfecto' },
+            { id: 'u7-14', eng: 'Conditionals', es: 'Condicionales' },
+            { id: 'u7-15', eng: 'Gerunds', es: 'Gerundios' },
+            { id: 'u7-16', eng: 'Infinitives', es: 'Infinitivos' },
+            { id: 'u7-17', eng: 'Object pronouns', es: 'Pronombres de objeto' },
+            { id: 'u7-18', eng: 'Subject pronouns', es: 'Pronombres de sujeto' },
+            { id: 'u7-19', eng: 'Adverbs', es: 'Adverbios' },
+            { id: 'u7-20', eng: 'Articles', es: 'Artículos' },
+            { id: 'u7-21', eng: 'Countable nouns', es: 'Sustantivos contables' },
+            { id: 'u7-22', eng: 'Uncountable nouns', es: 'Sustantivos incontables' },
+            { id: 'u7-23', eng: 'Relative clauses', es: 'Oraciones relativas' },
+            { id: 'u7-24', eng: 'Question tags', es: 'Coletillas interrogativas' },
+            { id: 'u7-25', eng: 'Passive voice', es: 'Voz pasiva' },
+            { id: 'u7-26', eng: 'Reported speech', es: 'Estilo indirecto' },
+            { id: 'u7-27', eng: 'Modal verbs', es: 'Verbos modales' },
+            { id: 'u7-28', eng: 'Phrasal verbs', es: 'Phrasal verbs' },
+            { id: 'u7-29', eng: 'Verb tenses review', es: 'Repaso de tiempos verbales' },
+            { id: 'u7-30', eng: 'Sentence connectors', es: 'Conectores' },
+          ],
+        },
+        {
+          id: 8,
+          name: 'Pronunciación y acento',
+          lessons: [
+            { id: 'u8-1', eng: 'Th sound', es: 'Sonido th' },
+            { id: 'u8-2', eng: 'R vs L', es: 'R versus L' },
+            { id: 'u8-3', eng: 'V vs B', es: 'V versus B' },
+            { id: 'u8-4', eng: 'Short vowels', es: 'Vocales cortas' },
+            { id: 'u8-5', eng: 'Long vowels', es: 'Vocales largas' },
+            { id: 'u8-6', eng: 'Syllable stress', es: 'Acento de sílaba' },
+            { id: 'u8-7', eng: 'Sentence rhythm', es: 'Ritmo de oración' },
+            { id: 'u8-8', eng: 'Intonation up/down', es: 'Entonación ascendente/descendente' },
+            { id: 'u8-9', eng: 'Linking words', es: 'Unión de palabras' },
+            { id: 'u8-10', eng: 'Silent letters', es: 'Letras mudas' },
+            { id: 'u8-11', eng: 'Tongue twisters', es: 'Trabalenguas' },
+            { id: 'u8-12', eng: 'Minimal pairs', es: 'Parejas mínimas' },
+            { id: 'u8-13', eng: 'Word endings', es: 'Finales de palabras' },
+            { id: 'u8-14', eng: 'Contractions', es: 'Contracciones' },
+            { id: 'u8-15', eng: 'Stress timing', es: 'Temporización del acento' },
+            { id: 'u8-16', eng: 'Glottal stop', es: 'Golpe glotal' },
+            { id: 'u8-17', eng: 'Schwa sound', es: 'Sonido schwa' },
+            { id: 'u8-18', eng: 'Vowel reduction', es: 'Reducción de vocales' },
+            { id: 'u8-19', eng: 'Diphthongs', es: 'Diptongos' },
+            { id: 'u8-20', eng: 'Word stress rules', es: 'Reglas de acento' },
+            { id: 'u8-21', eng: 'Weak forms', es: 'Formas débiles' },
+            { id: 'u8-22', eng: 'Strong forms', es: 'Formas fuertes' },
+            { id: 'u8-23', eng: 'Elision', es: 'Elisión' },
+            { id: 'u8-24', eng: 'Assimilation', es: 'Asimilación' },
+            { id: 'u8-25', eng: 'Intonation practice', es: 'Práctica de entonación' },
+            { id: 'u8-26', eng: 'Stress shift', es: 'Cambio de acento' },
+            { id: 'u8-27', eng: 'Nasal sounds', es: 'Sonidos nasales' },
+            { id: 'u8-28', eng: 'Plosive sounds', es: 'Sonidos plosivos' },
+            { id: 'u8-29', eng: 'Fricatives', es: 'Fricativas' },
+            { id: 'u8-30', eng: 'Affricates', es: 'Africadas' },
+          ],
+        },
+        {
+          id: 9,
+          name: 'Contextos culturales e idiomáticos',
+          lessons: [
+            { id: 'u9-1', eng: 'Break a leg', es: 'Mucha suerte' },
+            { id: 'u9-2', eng: 'Hit the road', es: 'Ponerse en camino' },
+            { id: 'u9-3', eng: 'Piece of cake', es: 'Muy fácil' },
+            { id: 'u9-4', eng: 'Under the weather', es: 'Enfermo' },
+            { id: 'u9-5', eng: 'Bite the bullet', es: 'Aguantar' },
+            { id: 'u9-6', eng: 'Better late than never', es: 'Más vale tarde que nunca' },
+            { id: 'u9-7', eng: 'Kill two birds with one stone', es: 'Matar dos pájaros de un tiro' },
+            { id: 'u9-8', eng: 'Once in a blue moon', es: 'Muy de vez en cuando' },
+            { id: 'u9-9', eng: 'When pigs fly', es: 'Cuando las ranas críen pelo' },
+            { id: 'u9-10', eng: 'Spill the beans', es: 'Revelar un secreto' },
+            { id: 'u9-11', eng: 'Take with a grain of salt', es: 'Tomar con precaución' },
+            { id: 'u9-12', eng: 'Beat around the bush', es: 'Andarse por las ramas' },
+            { id: 'u9-13', eng: 'Break the ice', es: 'Romper el hielo' },
+            { id: 'u9-14', eng: 'Costs an arm and a leg', es: 'Cuesta un ojo de la cara' },
+            { id: 'u9-15', eng: 'Hit the sack', es: 'Irse a dormir' },
+            { id: 'u9-16', eng: 'Speak of the devil', es: 'Hablando del rey de Roma' },
+            { id: 'u9-17', eng: 'Let the cat out of the bag', es: 'Revelar un secreto' },
+            { id: 'u9-18', eng: 'The ball is in your court', es: 'Te toca a ti' },
+            { id: 'u9-19', eng: 'On cloud nine', es: 'Muy feliz' },
+            { id: 'u9-20', eng: 'Sleep on it', es: 'Piénsalo bien' },
+            { id: 'u9-21', eng: 'It’s not rocket science', es: 'No es complicado' },
+            { id: 'u9-22', eng: 'By the skin of your teeth', es: 'Por los pelos' },
+            { id: 'u9-23', eng: 'Hit the nail on the head', es: 'Dar en el clavo' },
+            { id: 'u9-24', eng: 'Throw in the towel', es: 'Rendirse' },
+            { id: 'u9-25', eng: 'Step up your game', es: 'Mejora tu rendimiento' },
+            { id: 'u9-26', eng: 'Cut to the chase', es: 'Ir al grano' },
+            { id: 'u9-27', eng: 'Bend over backwards', es: 'Hacer lo imposible' },
+            { id: 'u9-28', eng: 'A blessing in disguise', es: 'Algo bueno disfrazado de malo' },
+            { id: 'u9-29', eng: 'Burn the midnight oil', es: 'Trabajar hasta tarde' },
+            { id: 'u9-30', eng: 'Throw caution to the wind', es: 'Arriesgarse' },
+          ],
+        },
+        {
+          id: 10,
+          name: 'Fluidez conversacional',
+          lessons: [
+            { id: 'u10-1', eng: 'Tell me about yourself', es: 'Cuéntame sobre ti' },
+            { id: 'u10-2', eng: 'What do you do?', es: '¿A qué te dedicas?' },
+            { id: 'u10-3', eng: 'How was your day?', es: '¿Cómo estuvo tu día?' },
+            { id: 'u10-4', eng: 'What do you think?', es: '¿Qué piensas?' },
+            { id: 'u10-5', eng: 'I’m learning English', es: 'Estoy aprendiendo inglés' },
+            { id: 'u10-6', eng: 'I agree with you', es: 'Estoy de acuerdo contigo' },
+            { id: 'u10-7', eng: 'That’s interesting', es: 'Eso es interesante' },
+            { id: 'u10-8', eng: 'Could you explain?', es: '¿Puedes explicar?' },
+            { id: 'u10-9', eng: 'Let’s practice together', es: 'Practiquemos juntos' },
+            { id: 'u10-10', eng: 'What’s your opinion?', es: '¿Cuál es tu opinión?' },
+            { id: 'u10-11', eng: 'I don’t understand', es: 'No entiendo' },
+            { id: 'u10-12', eng: 'Could you repeat that?', es: '¿Podrías repetir eso?' },
+            { id: 'u10-13', eng: 'That reminds me of', es: 'Eso me recuerda a' },
+            { id: 'u10-14', eng: 'In my opinion', es: 'En mi opinión' },
+            { id: 'u10-15', eng: 'I’m not sure', es: 'No estoy seguro' },
+            { id: 'u10-16', eng: 'Let’s change the topic', es: 'Cambiemos de tema' },
+            { id: 'u10-17', eng: 'By the way', es: 'Por cierto' },
+            { id: 'u10-18', eng: 'That’s a good point', es: 'Ese es un buen punto' },
+            { id: 'u10-19', eng: 'What do you mean?', es: '¿Qué quieres decir?' },
+            { id: 'u10-20', eng: 'I’m sorry to interrupt', es: 'Perdón por interrumpir' },
+            { id: 'u10-21', eng: 'Take your time', es: 'Tómate tu tiempo' },
+            { id: 'u10-22', eng: 'I have a question', es: 'Tengo una pregunta' },
+            { id: 'u10-23', eng: 'Let’s see', es: 'Veamos' },
+            { id: 'u10-24', eng: 'I think so', es: 'Creo que sí' },
+            { id: 'u10-25', eng: 'I hope so', es: 'Eso espero' },
+            { id: 'u10-26', eng: 'Sounds good', es: 'Suena bien' },
+            { id: 'u10-27', eng: 'That’s funny', es: 'Eso es gracioso' },
+            { id: 'u10-28', eng: 'I see what you mean', es: 'Entiendo lo que quieres decir' },
+            { id: 'u10-29', eng: 'Tell me more', es: 'Cuéntame más' },
+            { id: 'u10-30', eng: 'Thanks for sharing', es: 'Gracias por compartir' },
+          ],
+        },
+        {
+          id: 11,
+          name: 'Inglés práctico para viajes y trabajo',
+          lessons: [
+            { id: 'u11-1', eng: 'Where is the hotel?', es: '¿Dónde está el hotel?' },
+            { id: 'u11-2', eng: 'I have a reservation', es: 'Tengo una reserva' },
+            { id: 'u11-3', eng: 'How much does it cost?', es: '¿Cuánto cuesta?' },
+            { id: 'u11-4', eng: 'I need help', es: 'Necesito ayuda' },
+            { id: 'u11-5', eng: 'Could you recommend...', es: '¿Podrías recomendarme...' },
+            { id: 'u11-6', eng: 'Where can I buy a ticket?', es: '¿Dónde puedo comprar un boleto?' },
+            { id: 'u11-7', eng: 'What time does it leave?', es: '¿A qué hora sale?' },
+            { id: 'u11-8', eng: 'I’m here for business', es: 'Estoy aquí por negocios' },
+            { id: 'u11-9', eng: 'Do you have Wi‑Fi?', es: '¿Tiene Wi‑Fi?' },
+            { id: 'u11-10', eng: 'Where is the conference room?', es: '¿Dónde está la sala de conferencias?' },
+            { id: 'u11-11', eng: 'I need to check in', es: 'Necesito registrarme' },
+            { id: 'u11-12', eng: 'The flight is delayed', es: 'El vuelo está retrasado' },
+            { id: 'u11-13', eng: 'What gate is it?', es: '¿En qué puerta es?' },
+            { id: 'u11-14', eng: 'Can I have the bill, please?', es: '¿Me trae la cuenta, por favor?' },
+            { id: 'u11-15', eng: 'Where is the nearest ATM?', es: '¿Dónde está el cajero automático más cercano?' },
+            { id: 'u11-16', eng: 'How do I get to the airport?', es: '¿Cómo llego al aeropuerto?' },
+            { id: 'u11-17', eng: 'Can you repeat that, please?', es: '¿Puedes repetir eso, por favor?' },
+            { id: 'u11-18', eng: 'I am lost', es: 'Estoy perdido' },
+            { id: 'u11-19', eng: 'Could you speak slower?', es: '¿Puedes hablar más despacio?' },
+            { id: 'u11-20', eng: 'I would like a coffee', es: 'Quisiera un café' },
+            { id: 'u11-21', eng: 'Where is the restroom?', es: '¿Dónde está el baño?' },
+            { id: 'u11-22', eng: 'Do you accept credit cards?', es: '¿Aceptan tarjetas de crédito?' },
+            { id: 'u11-23', eng: 'Could you write it down?', es: '¿Puedes escribirlo?' },
+            { id: 'u11-24', eng: 'I need directions', es: 'Necesito direcciones' },
+            { id: 'u11-25', eng: 'Where can I exchange money?', es: '¿Dónde puedo cambiar dinero?' },
+            { id: 'u11-26', eng: 'What is the wifi password?', es: '¿Cuál es la contraseña del wifi?' },
+            { id: 'u11-27', eng: 'How long is the wait?', es: '¿Cuánto es la espera?' },
+            { id: 'u11-28', eng: 'Could you call a taxi?', es: '¿Puedes llamar un taxi?' },
+            { id: 'u11-29', eng: 'I’m vegetarian', es: 'Soy vegetariano' },
+            { id: 'u11-30', eng: 'I need a doctor', es: 'Necesito un médico' },
+          ],
+        },
+        {
+          id: 12,
+          name: 'Revisión y maestría',
+          lessons: [
+            { id: 'u12-1', eng: 'Review greetings', es: 'Repasa los saludos' },
+            { id: 'u12-2', eng: 'Review numbers', es: 'Repasa los números' },
+            { id: 'u12-3', eng: 'Review family words', es: 'Repasa las palabras de familia' },
+            { id: 'u12-4', eng: 'Review food vocabulary', es: 'Repasa el vocabulario de comida' },
+            { id: 'u12-5', eng: 'Review common verbs', es: 'Repasa los verbos comunes' },
+            { id: 'u12-6', eng: 'Review past tense', es: 'Repasa el pasado' },
+            { id: 'u12-7', eng: 'Review future tense', es: 'Repasa el futuro' },
+            { id: 'u12-8', eng: 'Review prepositions', es: 'Repasa las preposiciones' },
+            { id: 'u12-9', eng: 'Review pronunciation tips', es: 'Repasa los consejos de pronunciación' },
+            { id: 'u12-10', eng: 'Review idioms', es: 'Repasa los modismos' },
+            { id: 'u12-11', eng: 'Review conversation starters', es: 'Repasa frases para conversar' },
+            { id: 'u12-12', eng: 'Review travel phrases', es: 'Repasa frases de viaje' },
+            { id: 'u12-13', eng: 'Review work phrases', es: 'Repasa frases de trabajo' },
+            { id: 'u12-14', eng: 'Practice reading', es: 'Practica lectura' },
+            { id: 'u12-15', eng: 'Practice writing', es: 'Practica escritura' },
+            { id: 'u12-16', eng: 'Practice listening', es: 'Practica escucha' },
+            { id: 'u12-17', eng: 'Practice speaking', es: 'Practica habla' },
+            { id: 'u12-18', eng: 'Master 100 words', es: 'Domina 100 palabras' },
+            { id: 'u12-19', eng: 'Master 200 words', es: 'Domina 200 palabras' },
+            { id: 'u12-20', eng: 'Master 300 words', es: 'Domina 300 palabras' },
+            { id: 'u12-21', eng: 'Take a final quiz', es: 'Haz un quiz final' },
+            { id: 'u12-22', eng: 'Celebrate progress', es: 'Celebra tu progreso' },
+            { id: 'u12-23', eng: 'Set new goals', es: 'Establece nuevas metas' },
+            { id: 'u12-24', eng: 'Review vocabulary', es: 'Repasa vocabulario' },
+            { id: 'u12-25', eng: 'Review grammar', es: 'Repasa la gramática' },
+            { id: 'u12-26', eng: 'Review pronunciation', es: 'Repasa pronunciación' },
+            { id: 'u12-27', eng: 'Review idioms', es: 'Repasa modismos' },
+            { id: 'u12-28', eng: 'Review conversation', es: 'Repasa conversación' },
+            { id: 'u12-29', eng: 'Review travel & work', es: 'Repasa viaje y trabajo' },
+            { id: 'u12-30', eng: 'Achieve mastery', es: 'Alcanza la maestría' },
+          ],
+        },
+      ];
+      // Append extended units
+      units.push(...moreUnits);
+
+      // ---------------------------------------------------------------------------
+      // Storage keys and default progress
+      //
+      // The app uses localStorage to persist configuration, progress, streaks and
+      // flashcard scheduling. When the app runs offline, it loads the saved
+      // progress so learners never lose their data. If no progress exists, a
+      // default structure is created. The keys are namespaced to avoid
+      // collisions with other applications.
+      // ---------------------------------------------------------------------------
+      const STORAGE_KEYS = {
+        config: 'english‑pwa‑config',
+        progress: 'english‑pwa‑progress',
+      };
+
+      function defaultProgress() {
+        return {
+          streak: 0,
+          lastStudyDate: null,
+          points: 0,
+          badges: [],
+          flashcards: {},
+        };
+      }
+
+      const state = {
+        config: null,
+        progress: null,
+        currentUnit: null,
+        currentLessonIndex: 0,
+        currentFlashcard: null,
+        quiz: null,
+      };
+
+      function $(selector) {
+        return document.querySelector(selector);
+      }
+
+      function $$(selector) {
+        return document.querySelectorAll(selector);
+      }
+
+      function loadFromStorage(key, defaultValue) {
+        try {
+          const raw = localStorage.getItem(key);
+          if (!raw) return defaultValue;
+          return JSON.parse(raw);
+        } catch (e) {
+          return defaultValue;
+        }
+      }
+
+      function saveToStorage(key, value) {
+        localStorage.setItem(key, JSON.stringify(value));
+      }
+
+      // ---------------------------------------------------------------------------
+      // Speech synthesis: speak a phrase aloud using the Web Speech API. For
+      // simplicity we rely on the browser’s default English voice. If no voice is
+      // available, this function fails silently.
+      // ---------------------------------------------------------------------------
+      function speakPhrase(text) {
+        if (!('speechSynthesis' in window)) return;
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        speechSynthesis.speak(utterance);
+      }
+
+      // Update streak based on the last study date. If the user studied on the
+      // previous day, increment the streak. If a day is missed, reset the streak.
+      function updateStreak() {
+        const p = state.progress;
+        const today = new Date().toISOString().substring(0, 10);
+        if (!p.lastStudyDate) {
+          p.streak = 1;
+        } else {
+          const yesterday = new Date(Date.now() - 86400000)
+            .toISOString()
+            .substring(0, 10);
+          if (p.lastStudyDate === today) {
+            // already counted
+            return;
+          } else if (p.lastStudyDate === yesterday) {
+            p.streak += 1;
+          } else {
+            p.streak = 1;
+          }
+        }
+        p.lastStudyDate = today;
+        saveToStorage(STORAGE_KEYS.progress, p);
+      }
+
+      // Award badges based on milestones. Currently three badges: first steps
+      // (complete first lesson), week streak (7 days in a row), and mastering
+      // 100 words (spaced repetition intervals). Extend this list with more
+      // badges as desired.
+      function awardBadges() {
+        const p = state.progress;
+        // First steps badge
+        if (p.points >= 5 && !p.badges.includes('first-steps')) {
+          p.badges.push('first-steps');
+          alert('¡Felicidades! Has obtenido la insignia: Primeros pasos');
+        }
+        // 7-day streak badge
+        if (p.streak >= 7 && !p.badges.includes('week-streak')) {
+          p.badges.push('week-streak');
+          alert('¡Genial! Has completado una racha de 7 días');
+        }
+        // 100 words mastered badge
+        const masteredCount = Object.values(p.flashcards).filter(
+          (card) => card.interval >= 7
+        ).length;
+        if (masteredCount >= 100 && !p.badges.includes('hundred-words')) {
+          p.badges.push('hundred-words');
+          alert('¡Increíble! Has dominado 100 palabras/expresiones');
+        }
+        saveToStorage(STORAGE_KEYS.progress, p);
+      }
+
+      // Create and display the daily plan cards on the home screen. Each plan
+      // corresponds to one of the core activities: listening practice, flashcards
+      // and a short quiz. Clicking a card triggers the associated view.
+      function buildDailyPlan() {
+        const container = $('#daily-plan');
+        container.innerHTML = '';
+        const plans = [
+          {
+            id: 'listen',
+            title: 'Escuchar y repetir',
+            description: 'Practica frases clave con audio y repite',
+            duration: 4,
+          },
+          {
+            id: 'flashcards',
+            title: 'Tarjetas',
+            description: 'Repasa vocabulario con repetición espaciada',
+            duration: 4,
+          },
+          {
+            id: 'quiz',
+            title: 'Quiz rápido',
+            description: 'Responde un breve cuestionario',
+            duration: 2,
+          },
+        ];
+        plans.forEach((plan) => {
+          const card = document.createElement('div');
+          card.className = 'unit-card';
+          card.innerHTML = `<h3>${plan.title}</h3><p>${plan.description}</p><p><strong>${plan.duration} min</strong></p>`;
+          card.addEventListener('click', () => {
+            if (plan.id === 'listen') {
+              startListeningPractice();
+            } else if (plan.id === 'flashcards') {
+              startFlashcards();
+            } else if (plan.id === 'quiz') {
+              startQuiz();
+            }
+          });
+          container.appendChild(card);
+        });
+      }
+
+      // Render the list of units with progress bars. Clicking a unit card opens
+      // listening practice for that unit starting from the first unfinished lesson.
+      function buildUnitsList() {
+        const container = $('#units-list');
+        container.innerHTML = '';
+        units.forEach((unit) => {
+          const card = document.createElement('div');
+          card.className = 'unit-card';
+          card.tabIndex = 0;
+          card.setAttribute('role', 'button');
+          card.innerHTML = `<h3>${unit.name}</h3><div class="progress-bar"><div class="fill"></div></div>`;
+          // Compute progress per unit: percentage of lessons that have been
+          // scheduled at least once in flashcards
+          const total = unit.lessons.length;
+          let completed = 0;
+          unit.lessons.forEach((lesson) => {
+            const fc = state.progress.flashcards[lesson.id];
+            if (fc && fc.interval >= 1) completed++;
+          });
+          const percent = Math.round((completed / total) * 100);
+          card.querySelector('.fill').style.width = percent + '%';
+          card.addEventListener('click', () => {
+            state.currentUnit = unit.id;
+            state.currentLessonIndex = 0;
+            startListeningPractice(unit.id);
+          });
+          container.appendChild(card);
+        });
+      }
+
+      // Show greeting and streak info on home screen
+      function updateHomeHeader() {
+        const greet = $('#home-greeting');
+        const streakEl = $('#streak-container');
+        greet.textContent = `¡Hola, Adriana!`;
+        const streak = state.progress.streak;
+        if (streak > 1) {
+          streakEl.textContent = `Racha de ${streak} días`;
+        } else {
+          streakEl.textContent = '';
+        }
+      }
+
+      // ---------------------------------------------------------------------------
+      // Listening Practice
+      //
+      // The listening practice shows a phrase from the selected unit. It speaks
+      // the English text aloud and encourages the learner to repeat. The user
+      // can navigate through phrases using Next and Prev buttons. Completing
+      // listening practice gives a small points boost. If called without a unit
+      // id, the first unit is selected by default.
+      // ---------------------------------------------------------------------------
+      function startListeningPractice(unitId = null) {
+        // Default to the next unit not yet completed
+        let unit;
+        if (unitId) {
+          unit = units.find((u) => u.id === unitId);
+        } else {
+          unit = units[0];
+        }
+        state.currentUnit = unit.id;
+        showScreen('lesson-screen');
+        renderLesson();
+      }
+
+      // Render the current phrase within the selected unit. Provides Play audio
+      // capability and navigation controls. When reaching the end of the unit
+      // the function loops back to the beginning.
+      function renderLesson() {
+        const unit = units.find((u) => u.id === state.currentUnit);
+        const lesson = unit.lessons[state.currentLessonIndex];
+        $('#lesson-title').textContent = unit.name;
+        $('#lesson-subtitle').textContent = `${state.currentLessonIndex + 1} / ${unit.lessons.length}`;
+        const content = $('#lesson-content');
+        content.innerHTML = '';
+        const phraseEl = document.createElement('div');
+        phraseEl.className = 'phrase';
+        phraseEl.textContent = lesson.eng;
+        const translationEl = document.createElement('div');
+        translationEl.className = 'translation';
+        translationEl.textContent = lesson.es;
+        content.appendChild(phraseEl);
+        content.appendChild(translationEl);
+        // Controls
+        const controls = $('#lesson-controls');
+        controls.innerHTML = '';
+        const playBtn = document.createElement('button');
+        playBtn.className = 'primary';
+        playBtn.textContent = 'Escuchar';
+        playBtn.addEventListener('click', () => {
+          speakPhrase(lesson.eng);
+        });
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'secondary';
+        prevBtn.textContent = 'Anterior';
+        prevBtn.disabled = state.currentLessonIndex === 0;
+        prevBtn.addEventListener('click', () => {
+          if (state.currentLessonIndex > 0) {
+            state.currentLessonIndex--;
+            renderLesson();
+          }
+        });
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'secondary';
+        nextBtn.textContent = 'Siguiente';
+        nextBtn.addEventListener('click', () => {
+          if (state.currentLessonIndex < unit.lessons.length - 1) {
+            state.currentLessonIndex++;
+          } else {
+            state.currentLessonIndex = 0;
+          }
+          renderLesson();
+        });
+        controls.appendChild(playBtn);
+        controls.appendChild(prevBtn);
+        controls.appendChild(nextBtn);
+        // Award points when the user listens to the phrase for the first time
+        if (!state.progress.flashcards[lesson.id]) {
+          state.progress.points += 1;
+          saveToStorage(STORAGE_KEYS.progress, state.progress);
+        }
+      }
+
+      // ---------------------------------------------------------------------------
+      // Flashcards (Spaced repetition)
+      //
+      // Uses a simple scheduling algorithm. Each card has an interval and due
+      // date. New cards start with interval = 1 day. On rating, the interval
+      // increases (easy -> +4 days, medio -> +2 days, de nuevo -> reset to 1 day).
+      // The next due date is calculated from the current date. Cards are stored
+      // in the progress.flashcards map.
+      // ---------------------------------------------------------------------------
+      function startFlashcards() {
+        // Build a queue of due flashcards. If none are due, introduce new cards
+        const due = [];
+        const today = new Date().getTime();
+        // Add existing due cards
+        Object.keys(state.progress.flashcards).forEach((id) => {
+          const card = state.progress.flashcards[id];
+          if (card.dueDate <= today) {
+            due.push({ id, ...card });
+          }
+        });
+        // If there are no due cards, pick a few new lessons to introduce
+        if (due.length === 0) {
+          // gather all lesson ids already in flashcards
+          const learntIds = new Set(Object.keys(state.progress.flashcards));
+          const newCards = [];
+          units.forEach((unit) => {
+            unit.lessons.forEach((lesson) => {
+              if (!learntIds.has(lesson.id)) {
+                newCards.push(lesson);
+              }
+            });
+          });
+          // Limit to 5 new cards at a time
+          due.push(
+            ...newCards.slice(0, 5).map((lesson) => ({
+              id: lesson.id,
+              eng: lesson.eng,
+              es: lesson.es,
+              interval: 0,
+              dueDate: today,
+            }))
+          );
+        }
+        if (due.length === 0) {
+          alert('¡No hay tarjetas pendientes por ahora!');
+          return;
+        }
+        // Save due queue in state
+        state.currentFlashcard = {
+          queue: due,
+          index: 0,
+        };
+        showScreen('flashcards-screen');
+        renderFlashcard();
+      }
+
+      function renderFlashcard() {
+        const fc = state.currentFlashcard;
+        const cardData = fc.queue[fc.index];
+        const lesson = findLessonById(cardData.id);
+        const container = $('#flashcard-content');
+        container.innerHTML = '';
+        const card = document.createElement('div');
+        card.className = 'flashcard';
+        // front/back toggling
+        let showingFront = true;
+        const front = document.createElement('div');
+        front.className = 'front';
+        front.textContent = lesson.eng;
+        const back = document.createElement('div');
+        back.className = 'back hidden';
+        back.textContent = lesson.es;
+        card.appendChild(front);
+        card.appendChild(back);
+        card.addEventListener('click', () => {
+          showingFront = !showingFront;
+          if (showingFront) {
+            front.classList.remove('hidden');
+            back.classList.add('hidden');
+          } else {
+            front.classList.add('hidden');
+            back.classList.remove('hidden');
+          }
+        });
+        container.appendChild(card);
+        // Rating buttons
+        const buttonsContainer = $('#flashcard-buttons');
+        buttonsContainer.innerHTML = '';
+        const againBtn = document.createElement('button');
+        againBtn.className = 'primary';
+        againBtn.textContent = 'De nuevo';
+        const medioBtn = document.createElement('button');
+        medioBtn.className = 'primary';
+        medioBtn.textContent = 'Medio';
+        const easyBtn = document.createElement('button');
+        easyBtn.className = 'primary';
+        easyBtn.textContent = 'Fácil';
+        buttonsContainer.appendChild(againBtn);
+        buttonsContainer.appendChild(medioBtn);
+        buttonsContainer.appendChild(easyBtn);
+        // Handler for rating
+        function rateCard(multiplier) {
+          // multiplier: 1 for again, 2 for medio, 4 for easy
+          const todayDate = new Date();
+          const progressCard = state.progress.flashcards[cardData.id] || {
+            interval: 0,
+            dueDate: todayDate.getTime(),
+          };
+          // Increase interval accordingly
+          const newInterval = Math.max(1, progressCard.interval * multiplier);
+          progressCard.interval = newInterval;
+          // Due date after interval days
+          const dueDate = new Date(todayDate.getTime());
+          dueDate.setDate(todayDate.getDate() + newInterval);
+          progressCard.dueDate = dueDate.getTime();
+          state.progress.flashcards[cardData.id] = progressCard;
+          state.progress.points += multiplier; // award more points for harder ratings
+          saveToStorage(STORAGE_KEYS.progress, state.progress);
+          // Move to next card
+          if (fc.index < fc.queue.length - 1) {
+            fc.index += 1;
+            renderFlashcard();
+          } else {
+            alert('¡Sesión de tarjetas completada!');
+            awardBadges();
+            showHome();
+          }
+        }
+        againBtn.addEventListener('click', () => rateCard(1));
+        medioBtn.addEventListener('click', () => rateCard(2));
+        easyBtn.addEventListener('click', () => rateCard(4));
+      }
+
+      // Helper to find a lesson across all units by id
+      function findLessonById(id) {
+        for (const unit of units) {
+          for (const lesson of unit.lessons) {
+            if (lesson.id === id) return lesson;
+          }
+        }
+        return null;
+      }
+
+      // ---------------------------------------------------------------------------
+      // Quiz
+      //
+      // Builds a quiz of 5 multiple‑choice questions from across all units. Each
+      // question shows an English phrase and offers four Spanish translations
+      // (one correct and three incorrect). Points are awarded for correct
+      // answers. The quiz ends after five questions and returns to the home
+      // screen.
+      // ---------------------------------------------------------------------------
+      function startQuiz() {
+        // Prepare question pool
+        const allLessons = [];
+        units.forEach((unit) => {
+          unit.lessons.forEach((lesson) => {
+            allLessons.push(lesson);
+          });
+        });
+        const questions = [];
+        // Randomly choose 5 distinct lessons
+        const pool = [...allLessons];
+        for (let i = 0; i < 5 && pool.length > 0; i++) {
+          const idx = Math.floor(Math.random() * pool.length);
+          const lesson = pool.splice(idx, 1)[0];
+          // Build options: one correct and three incorrect translations
+          const options = [lesson.es];
+          while (options.length < 4) {
+            const rand = allLessons[Math.floor(Math.random() * allLessons.length)].es;
+            if (!options.includes(rand)) options.push(rand);
+          }
+          shuffleArray(options);
+          questions.push({
+            eng: lesson.eng,
+            correct: lesson.es,
+            options,
+          });
+        }
+        state.quiz = { questions, index: 0, score: 0 };
+        showScreen('quiz-screen');
+        renderQuizQuestion();
+      }
+
+      function renderQuizQuestion() {
+        const q = state.quiz.questions[state.quiz.index];
+        const container = $('#quiz-content');
+        container.innerHTML = '';
+        const questionEl = document.createElement('div');
+        questionEl.className = 'quiz-question';
+        questionEl.textContent = q.eng;
+        container.appendChild(questionEl);
+        const optionsDiv = document.createElement('div');
+        optionsDiv.className = 'quiz-options';
+        q.options.forEach((opt) => {
+          const btn = document.createElement('button');
+          btn.className = 'primary';
+          btn.textContent = opt;
+          btn.addEventListener('click', () => {
+            if (opt === q.correct) {
+              state.quiz.score += 1;
+              state.progress.points += 2;
+            }
+            if (state.quiz.index < state.quiz.questions.length - 1) {
+              state.quiz.index++;
+              renderQuizQuestion();
+            } else {
+              finishQuiz();
+            }
+          });
+          optionsDiv.appendChild(btn);
+        });
+        container.appendChild(optionsDiv);
+        // Progress indicator
+        const progressEl = document.createElement('div');
+        progressEl.className = 'quiz-result';
+        progressEl.textContent = `Pregunta ${state.quiz.index + 1} de ${state.quiz.questions.length}`;
+        container.appendChild(progressEl);
+      }
+
+      function finishQuiz() {
+        const container = $('#quiz-content');
+        container.innerHTML = '';
+        const result = document.createElement('div');
+        result.className = 'quiz-result';
+        result.innerHTML = `¡Quiz completado!<br>Obtuviste ${state.quiz.score} de ${state.quiz.questions.length} respuestas correctas.`;
+        container.appendChild(result);
+        // Award points for completing the quiz
+        state.progress.points += state.quiz.score;
+        saveToStorage(STORAGE_KEYS.progress, state.progress);
+        awardBadges();
+        // After short delay, return to home
+        setTimeout(() => {
+          showHome();
+        }, 3000);
+      }
+
+      // Fisher-Yates shuffle to randomise options
+      function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+      }
+
+      // ---------------------------------------------------------------------------
+      // Progress view
+      //
+      // Displays total points, streak, number of mastered words and badges earned.
+      // ---------------------------------------------------------------------------
+      function showProgress() {
+        showScreen('progress-screen');
+        const summary = $('#progress-summary');
+        summary.innerHTML = '';
+        const pointsEl = document.createElement('p');
+        pointsEl.textContent = `Puntos: ${state.progress.points}`;
+        const streakEl = document.createElement('p');
+        streakEl.textContent = `Racha actual: ${state.progress.streak} días`;
+        // Mastered words count: interval >= 7 days
+        const masteredCount = Object.values(state.progress.flashcards).filter(
+          (card) => card.interval >= 7
+        ).length;
+        const masteredEl = document.createElement('p');
+        masteredEl.textContent = `Palabras dominadas: ${masteredCount}`;
+        summary.appendChild(pointsEl);
+        summary.appendChild(streakEl);
+        summary.appendChild(masteredEl);
+        // Badges
+        if (state.progress.badges.length > 0) {
+          const badgesHeading = document.createElement('p');
+          badgesHeading.textContent = 'Insignias:';
+          summary.appendChild(badgesHeading);
+          state.progress.badges.forEach((badge) => {
+            const badgeEl = document.createElement('span');
+            badgeEl.className = 'badge';
+            if (badge === 'first-steps') badgeEl.textContent = 'Primeros pasos';
+            else if (badge === 'week-streak') badgeEl.textContent = 'Racha de 7 días';
+            else if (badge === 'hundred-words') badgeEl.textContent = '100 palabras';
+            summary.appendChild(badgeEl);
+          });
+        }
+      }
+
+      // Return to home screen and refresh plan and header
+      function showHome() {
+        updateHomeHeader();
+        buildDailyPlan();
+        showScreen('home-screen');
+      }
+
+      // ---------------------------------------------------------------------------
+      // Setup and configuration
+      //
+      // Handles initial setup when no configuration exists. The learner selects
+      // a daily goal. Spanish hints are enabled by default. Once saved, the
+      // configuration is persisted and the home screen is displayed.
+      // ---------------------------------------------------------------------------
+      function setup() {
+        showScreen('setup-screen');
+        // Handle goal selection highlighting
+        $('#goal-options').addEventListener('click', (e) => {
+          if (e.target.matches('button[data-goal]')) {
+            $$('#goal-options button').forEach((btn) => btn.classList.remove('selected'));
+            e.target.classList.add('selected');
+            state.config = {
+              dailyGoal: parseInt(e.target.getAttribute('data-goal'), 10),
+              spanishHints: true,
+            };
+          }
+        });
+        $('#setup-continue').addEventListener('click', () => {
+          if (!state.config) {
+            alert('Por favor selecciona una meta diaria.');
+            return;
+          }
+          saveToStorage(STORAGE_KEYS.config, state.config);
+          showHome();
+        });
+      }
+
+      // Register service worker for offline support
+      function registerServiceWorker() {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker
+            .register('/service-worker.js')
+            .catch((err) => console.error('SW registration failed', err));
+        }
+      }
+
+      // Attach global event listeners for navigation buttons
+      function attachGlobalListeners() {
+        // Back buttons
+        $('#lesson-back').addEventListener('click', () => showHome());
+        $('#flashcards-back').addEventListener('click', () => showHome());
+        $('#quiz-back').addEventListener('click', () => showHome());
+        $('#progress-back').addEventListener('click', () => showHome());
+        $('#units-back').addEventListener('click', () => showHome());
+        // Home actions
+        $('#home-units').addEventListener('click', () => {
+          showScreen('units-screen');
+          buildUnitsList();
+        });
+        $('#home-progress').addEventListener('click', () => {
+          showProgress();
+        });
+      }
+
+      // Initialise the application. Load configuration and progress from
+      // localStorage, attach listeners and decide which screen to show.
+      function init() {
+        state.config = loadFromStorage(STORAGE_KEYS.config, null);
+        state.progress = loadFromStorage(STORAGE_KEYS.progress, null) || { ...defaultProgress() };
+        attachGlobalListeners();
+        registerServiceWorker();
+        if (!state.config) {
+          setup();
+        } else {
+          updateStreak();
+          showHome();
+        }
+      }
+
+      // View navigation helper: show a screen by id and hide others
+      function showScreen(id) {
+        document.querySelectorAll('.screen').forEach((el) => {
+          el.classList.add('hidden');
+        });
+        const screen = document.getElementById(id);
+        if (screen) {
+          screen.classList.remove('hidden');
+          screen.classList.add('active');
+        }
+      }
+
+      // Kick things off when DOM is ready
+      document.addEventListener('DOMContentLoaded', init);
+    })();
+    </script>
   </body>
 </html>
