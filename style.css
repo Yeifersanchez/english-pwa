@@ -10,7 +10,8 @@
   --secondary-color: #e0e0e0;
   --text-color: #222;
   --background-color: #fafafa;
-  --font-scale: 1.0;
+  /* Increase global font scale for better readability on mobile and for older learners */
+  --font-scale: 1.3;
   /* Adjust this value if you need larger text globally */
 }
 
