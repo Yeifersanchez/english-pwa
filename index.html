@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#3366cc" />
+    <link rel="manifest" href="manifest.json" />
+    <title>Aprende Inglés</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <main id="app">
+      <!-- Setup screen: first time configuration -->
+      <section id="setup-screen" class="screen">
+        <h1>Bienvenida, Adriana</h1>
+        <p>
+          Selecciona tu meta diaria de estudio para comenzar. Puedes cambiarla
+          después en la configuración.
+        </p>
+        <div class="goal-options" id="goal-options">
+          <button type="button" data-goal="15">15&nbsp;minutos</button>
+          <button type="button" data-goal="30">30&nbsp;minutos</button>
+          <button type="button" data-goal="45">45&nbsp;minutos</button>
+        </div>
+        <button id="setup-continue" class="primary" type="button">
+          Continuar
+        </button>
+      </section>
+
+      <!-- Home screen: daily plan and navigation -->
+      <section id="home-screen" class="screen hidden">
+        <h1 id="home-greeting">Hola</h1>
+        <div id="daily-plan" class="plan-container"></div>
+        <div id="streak-container" class="streak-container"></div>
+        <div class="home-actions">
+          <button id="home-units" class="secondary" type="button">Unidades</button>
+          <button id="home-progress" class="secondary" type="button">Progreso</button>
+        </div>
+      </section>
+
+      <!-- Units list screen: display units -->
+      <section id="units-screen" class="screen hidden">
+        <h1>Unidades de aprendizaje</h1>
+        <div id="units-list" class="units-list"></div>
+        <button id="units-back" class="secondary" type="button">Volver</button>
+      </section>
+
+      <!-- Lesson screen: listen & repeat practice -->
+      <section id="lesson-screen" class="screen hidden">
+        <h1 id="lesson-title"></h1>
+        <p id="lesson-subtitle" class="subtitle"></p>
+        <div id="lesson-content" class="lesson-content"></div>
+        <div id="lesson-controls" class="lesson-controls"></div>
+        <button id="lesson-back" class="secondary" type="button">Volver</button>
+      </section>
+
+      <!-- Flashcards screen: spaced repetition flashcards -->
+      <section id="flashcards-screen" class="screen hidden">
+        <h1>Tarjetas de estudio</h1>
+        <div id="flashcard-content" class="flashcard-content"></div>
+        <div id="flashcard-buttons" class="flashcard-buttons"></div>
+        <button id="flashcards-back" class="secondary" type="button">Volver</button>
+      </section>
+
+      <!-- Quiz screen: quick multiple-choice quiz -->
+      <section id="quiz-screen" class="screen hidden">
+        <h1>Quiz rápido</h1>
+        <div id="quiz-content" class="quiz-content"></div>
+        <button id="quiz-back" class="secondary" type="button">Volver</button>
+      </section>
+
+      <!-- Progress screen: show progress and badges -->
+      <section id="progress-screen" class="screen hidden">
+        <h1>Tu progreso</h1>
+        <div id="progress-summary" class="progress-summary"></div>
+        <button id="progress-back" class="secondary" type="button">Volver</button>
+      </section>
+    </main>
+    <script src="js/app.js"></script>
+  </body>
+</html>
